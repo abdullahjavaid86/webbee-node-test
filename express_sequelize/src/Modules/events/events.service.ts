@@ -1,8 +1,9 @@
-import Event from './entities/event.entity';
-
+import Event from "./entities/event.entity";
+import { Op } from "sequelize";
+import Workshop from "./entities/workshop.entity";
+import { endOfDay } from "date-fns";
 
 export class EventsService {
-
   async getWarmupEvents() {
     return await Event.findAll();
   }
@@ -85,7 +86,10 @@ export class EventsService {
      */
 
   async getEventsWithWorkshops() {
-    throw new Error('TODO task 1');
+    return await Event.findAll({
+      include: [Workshop],
+      order: [[{ model: Workshop, as: "workshops" }, "id", "ASC"]],
+    });
   }
 
   /* TODO: complete getFutureEventWithWorkshops so that it returns events with workshops, that have not yet started
@@ -155,6 +159,18 @@ export class EventsService {
     ```
      */
   async getFutureEventWithWorkshops() {
-    throw new Error('TODO task 2');
+    return await Event.findAll({
+      include: [
+        {
+          model: Workshop,
+          where: {
+            start: {
+              [Op.gt]: new Date().setHours(0, 0, 0, 0),
+            },
+          },
+        },
+      ],
+      order: [[{ model: Workshop, as: "workshops" }, "id", "ASC"]],
+    });
   }
 }

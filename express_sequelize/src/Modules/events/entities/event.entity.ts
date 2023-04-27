@@ -1,11 +1,14 @@
 import {
-  Table,
-  Column,
-  Model,
   AutoIncrement,
-  PrimaryKey
-} from 'sequelize-typescript';
-import { ModelAttributeColumnOptions } from 'sequelize';
+  Column,
+  HasMany,
+  Model,
+  PrimaryKey,
+  Table,
+} from "sequelize-typescript";
+
+import { ModelAttributeColumnOptions } from "sequelize";
+import Workshop from "./workshop.entity";
 
 @Table({
   updatedAt: false,
@@ -19,6 +22,9 @@ export default class Event extends Model {
   @Column
   name: string;
 
-  @Column({ type: 'datetime' } as ModelAttributeColumnOptions)
+  @Column({ type: "datetime" } as ModelAttributeColumnOptions)
   declare createdAt: Date;
+
+  @HasMany(() => Workshop, "eventId")
+  workshops: Workshop[];
 }

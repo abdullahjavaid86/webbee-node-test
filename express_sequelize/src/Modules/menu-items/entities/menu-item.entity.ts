@@ -1,14 +1,16 @@
 import {
-  Table,
-  Column,
-  Model,
   AutoIncrement,
-  PrimaryKey
-} from 'sequelize-typescript';
-import { ModelAttributeColumnOptions } from 'sequelize';
+  Column,
+  HasMany,
+  Model,
+  PrimaryKey,
+  Table,
+} from "sequelize-typescript";
+
+import { ModelAttributeColumnOptions } from "sequelize";
 
 @Table({
-  tableName: 'menu_item',
+  tableName: "menu_item",
   updatedAt: false,
 })
 export default class MenuItem extends Model {
@@ -24,11 +26,14 @@ export default class MenuItem extends Model {
   url: string;
 
   @Column({
-    type: 'integer',
+    type: "integer",
     defaultValue: null,
   } as ModelAttributeColumnOptions)
   parentId: number;
 
-  @Column({ type: 'datetime' } as ModelAttributeColumnOptions)
+  @Column({ type: "datetime" } as ModelAttributeColumnOptions)
   declare createdAt: Date;
+
+  @HasMany(() => MenuItem, "parentId")
+  children: MenuItem[];
 }
